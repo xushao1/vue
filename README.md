@@ -1,4 +1,4 @@
-# vue-demo2
+# vue-sell
 
 ## Project setup
 ```
