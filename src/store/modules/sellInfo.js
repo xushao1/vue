@@ -22,13 +22,14 @@ const getters = {
     getterTotalPrice (state) {
         return state.totalPrice;
     },
-    gettreSeller (state) {
+    getterSeller (state) {
         return state.seller
     },
-    gettreGoods (state) {
+    getterGoods (state) {
         return state.goods
     },
-    gettreRatings (state) {
+    getterRatings (state) {
+        // console.log(state.ratings);
         return state.ratings
     },
 };
@@ -47,8 +48,26 @@ const mutations = {
     getinfo (state,info) {
         // console.log(info);
         state.seller = info.seller;
-        state.goods = info.goods;
+
         state.ratings = info.ratings;
+
+
+        //   随机给每一个小商品添加一个id
+        // console.log(info.goods);
+        let idNum = 0;
+        info.goods.forEach( (food) => {
+            // console.log(food);
+            // console.log(index);
+            food.foods.forEach( item => {
+                // console.log(item);
+                item['id'] = idNum;
+                idNum++;
+            });
+        });
+
+        state.goods = info.goods;
+
+        // console.log(state);
     }
 };
 

@@ -12,16 +12,19 @@
                     </div>
                 </div>
             </div>
-            <div class="head-notice flex flex-jube flex-itce">
+            <div class="head-notice flex flex-jube flex-itce" @click="routeLink">
                 <span class="icon icon-bulletin"></span>
                 <p class="flex-f1 bulletin"> {{sell.bulletin}}</p>
                 <i class="icon-keyboard_arrow_right"></i>
             </div>
         </div>
-        <div class="nav">
-            <ul class="flex flex-juar">
-                <li v-for="(text,index) in navText" :key="index" :class="{active: navActive == index}" v-on:click="navClick(index)">{{text}}</li>
-            </ul>
+        <div class="nav flex flex-juar">
+<!--            <ul class="flex flex-juar">-->
+<!--                <li v-for="(text,index) in navText" :key="index" :class="{active: navActive == index}" v-on:click="navClick(index)">{{text}}</li>-->
+<!--            </ul>-->
+            <router-link :to="{name:'goods'}" class="router">商品</router-link>
+            <router-link :to="{name:'rating'}" class="router">评价</router-link>
+            <router-link :to="{name:'sellInfo'}" class="router">商家</router-link>
         </div>
 
         <transition enter-active-class="animated fadeInDown" leave-active-class="animated fadeOutUp">
@@ -53,7 +56,7 @@
     // import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
     import { mapGetters } from 'vuex';
 
-    import star from '../star/star';
+    // import star from '../star/star';
     export default {
         name: "heade",
         data() {
@@ -66,7 +69,7 @@
             }
         },
         components: {
-            star
+            // star
         },
         created () {
             // vuex store 中获取数据
@@ -84,11 +87,14 @@
             },
             closeDialog () {
                 this.isShowDialog = false;
+            },
+            routeLink () {
+                this.$router.push({name: 'sellInfo'});
             }
         },
         computed: {
             ...mapGetters('sellInfo', {
-                sell: 'gettreSeller'
+                sell: 'getterSeller'
             })
         }
     }
@@ -139,7 +145,13 @@
     }
 
 
-
+    .router-link-active {
+        color: rgb(240,20,20);
+    }
+    .router {
+        -webkit-flex: 1; -ms-flex: 1; flex: 1;
+        text-align: center;
+    }
     #heade {
         color: @primaryColor;
 
@@ -253,7 +265,7 @@
             right: 0;
             padding: 64px 36px 32px;
             text-align: center;
-            z-index: 2;
+            z-index: 3;
             h3 {
                 font-size: 16px;
                 line-height: 16px;

@@ -1,5 +1,5 @@
 <template>
-    <div :class="'star'+ starSize" v-if="starScore" >
+    <div :class="'star'+ starSize" v-if="starScore" class="star">
         <span class="star" :class="type" v-for="(type,index) in starType" :key="index"></span>
     </div>
 </template>
@@ -43,6 +43,9 @@
 </script>
 
 <style scoped lang="less">
+    div {
+        display: inline-block;
+    }
     .starSize(@size: 24px) {
         width: @size;
         height: @size;
@@ -57,12 +60,22 @@
 
     .star {
         display: inline-block;
+        /*margin: 2px 0;*/
     }
     .star24 .star{
         .starSize(24px);
     }
     .star18 .star{
         .starSize(18px);
+    }
+    .star15 .star{
+        .starSize(15px);
+    }
+    .star12 .star{
+        .starSize(12px);
+    }
+    .star9 .star{
+        .starSize(9px);
     }
     .starOn {
         .startype(on);

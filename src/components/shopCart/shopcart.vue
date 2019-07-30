@@ -1,55 +1,179 @@
 <template>
-    <div class="shopCart">
+    <div class="shopCart " :class="{'shopCartActive' : total.tPrice}">
         <div class="shopCartBottom flex">
-            <div class="cartIcon" @click="isShowCartListFn"><span class="icon"><i class="icon-shopping_cart"></i></span><span class="iconNum">111</span></div>
+            <div class="cartIcon" @click="isShowCartListFn"><span class="icon"><i class="icon-shopping_cart"></i></span><span class="iconNum">{{total.tNum}}</span></div>
             <div class="cartPrice flex-f1 flex" >
-                <div class="cartPrice-l">￥1000</div>
+                <div class="cartPrice-l">￥{{total.tPrice}}</div>
                 <div class="cartPrice-r">另需配送费 ￥ 4元</div>
             </div>
-            <div class="cartBtn">￥20起送</div>
+            <div class="cartBtn " :class="{'cartBtnActive': cartBtnActive}" @click="pay">{{btnText}}</div>
         </div>
         <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <div class="cartList " v-show="isShowCartList">
+        <div class="cartList " v-show="isShowCartList && isCartList">
             <div class="cartList-t flex flex-jube">
                 <h4>购物车</h4>
-                <p class="clearBtn">清空</p>
+                <p class="clearBtn" @click="clearList">清空</p>
             </div>
+
             <div class="cartList-b">
                 <ul>
-                    <li>
-                        <p class="name">清华链子</p>
-                        <p class="price"><em>￥</em> 100</p>
-                        <p class="operate"><add-subtract></add-subtract></p>
+                    <transition v-for="list in cartList" :key="list.id" leave-active-class="animated fadeOutDown">
+                    <li  v-if="list.num">
+                        <p class="name">{{list.name}}</p>
+                        <p class="price"><em>￥</em> {{list.price}}</p>
+                        <p class="operate"><add-subtract :goodInfo="list"></add-subtract></p>
                     </li>
+                    </transition>
+
                 </ul>
             </div>
             <div style="height: 65px;"></div>
         </div></transition>
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <div class="shopCartMask" v-show="isShowCartList" @click="isShowCartListFn"></div></transition>
+        <div class="shopCartMask" v-show="isShowCartList && isCartList" @click="isShowCartListFn"></div></transition>
     </div>
 </template>
 
 <script>
+    import { mapGetters, mapActions } from 'vuex';
+
+    import { Toast } from 'mint-ui';
 
     export default {
         name: "shopcart",
         data () {
             return {
-                isShowCartList: false
+                isShowCartList: false,
+                clickFlag: true,
+                cartBtnActive: false
+                // btnText: '￥20起送'
             }
         },
         methods: {
+            ...mapActions('cart', {
+                clearInfo: 'clearInfo'
+            }),
             //是否显示购物车列表
             isShowCartListFn () {
-                // setTimeout(() => {},1000);
-                this.isShowCartList = !this.isShowCartList;
+                if(this.clickFlag) {
+
+                    // console.log('购物车 是否有清单' + this.total.tPrice);
+                    // if(!this.total.tPrice) {
+                    //     this.isShowCartList = false;
+                    //     alert('请优先选择菜单！');
+                    //     return;
+                    // }
+
+                    if(!this.isCartList) {
+                        // console.log(Toast);
+                        Toast({
+                            message: '请优先选择菜单',
+                            duration: 2000,
+                            iconClass: 'icon icon-favorite',
+                            className: 'mytoast'
+                        });
+                        // alert('请优先选择菜单！');
+                        return;
+                    }
+
+                    this.clickFlag = false;
+
+                    this.isShowCartList = !this.isShowCartList;
+                    setTimeout(() => {
+                        this.clickFlag = true;
+                    },1000);
+                }
+            },
+            clearList () {
+                //  清空购物车
+                this.clearInfo();
+            },
+            pay () {
+            //    跳转到支付页面
+                if(this.cartBtnActive) {
+                    Toast({
+                        message: '跳转到支付页面',
+                        duration: 2000,
+                        iconClass: 'icon icon-check_circle',
+                        className: 'mytoast'
+                    });
+                } else {
+                    return
+                }
             }
+        },
+        mounted () {
+            // this.$nextTick( () => {
+            //
+            //     console.log(this.goods);
+            // });
+            // console.log(this.isCartList);
+        },
+        watch: {
+            // cartList: list => {
+            //     // console.log(this.id);
+            //     console.log(this.cartList);
+            //     console.log(list);
+            //     // return list;
+            // },
+
+            // total: {
+            //     handler: val =>  {
+            //         // console.log('购物车1-------');
+            //         console.log(val);
+            //         // console.log(this.goods);
+            //
+            //     },
+            //     deep: true
+            // }
+        },
+        computed: {
+            ...mapGetters('cart', {
+                cartList: 'getterCartList',
+                total: 'getterTotal'
+            }),
+            // ...mapGetters('sellInfo', {
+            //     goods: 'gettreGoods'
+            // }),
+            isCartList: {
+                get: function() {
+                    let _this = this;
+                    // 判断用户是否有选择food
+                    if(_this.total.tPrice) {
+                        return true;
+                    } else {
+                        // 如果去掉了选项，此处将列表设为隐藏
+                        _this.isShowCartList = false;
+
+                        return false;
+                    }
+                }
+            },
+            btnText () {
+                let _this = this;
+                if(_this.total.tPrice >= 20) {
+                    _this.cartBtnActive = true;
+                    return '去结算'
+                } else if( _this.total.tPrice > 0 ) {
+                    _this.cartBtnActive = false;
+                    return `还差 ￥${ 20 - _this.total.tPrice }起送`
+                } else {
+                    _this.cartBtnActive = false;
+                    return '￥20起送'
+                }
+            }
+
+
         }
     }
 </script>
-
+<style>
+    .mytoast .icon {
+        color: rgb(0,160,220);
+    }
+</style>
 <style scoped lang="less">
+
     @primaryColor: rgba(255,255,255,0.4);
 
     .bgc(@alpha: 0.5) {
@@ -64,6 +188,7 @@
     .bgc(0.8);
     color: @primaryColor;
     line-height: 50px;
+    z-index: 2;
     .shopCartBottom {
         position: relative;
         z-index: 3;
@@ -186,6 +311,8 @@
             padding: 0 18px;
             overflow-y: scroll;
             max-height: 240px;
+            transition: all 1s ease;
+            height: auto;
             li {
                 height: 48px;
                 line-height: 48px;
