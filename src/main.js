@@ -3,7 +3,7 @@ import Vue from 'vue';
 import vueRouter from 'vue-router';
 
 Vue.use(vueRouter);
-// 引入公共样式
+// 引入公共样式 在线修改了下
 import './assets/static/css/reset.css';
 // font css
 import './assets/static/css/style.css';
