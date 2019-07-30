@@ -58,7 +58,7 @@
         },
         methods: {
             add (e) {
-                console.log(e);
+                // console.log(e);
                 // e.stopPropagation();
                 // e.stopPropagation()
                 // let _this = this;

@@ -84,7 +84,7 @@ const actions = {
 
 const mutations = {
     addToCartList (state,info) {
-        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+        // console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++');
         // console.log(info);
         //添加到购物车中
         // let list = state.cartList ? state.cartList : [];
@@ -143,7 +143,7 @@ const mutations = {
     },
     removeToCartList (state, info) {
         // console.log(info);
-        console.log('---------------------------------------------------');
+        // console.log('---------------------------------------------------');
 
         // let list = state.cartList ? state.cartList : [];
         let list = state.cartList;

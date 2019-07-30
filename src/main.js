@@ -8,7 +8,7 @@ import './assets/static/css/reset.css';
 // font css
 import './assets/static/css/style.css';
 // 引入animate.css
-import '../node_modules/animate.css/animate.css'
+import '../node_modules/animate.css/animate.css';
 
 // 引入mint-ui
 import 'mint-ui/lib/style.css';
